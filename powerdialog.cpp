@@ -22,20 +22,30 @@ PowerDialog::~PowerDialog() {}
 
 // Sets up the vertical layout with 3 power up slots, each with a label and button
 void PowerDialog::setupUI() {
-    // Main layout container
-    QVBoxLayout* mainLayout = new QVBoxLayout(this);
-    // Get current powerups from the player
+    useButtons.clear();
+    // If a layout already exists, delete it and everything inside it
+    if (layout()) {
+        QLayoutItem* item;
+        while ((item = layout()->takeAt(0)) != nullptr) {
+            if (item->widget()) item->widget()->deleteLater();
+            delete item;
+        }
+        delete layout();  // Delete old layout entirely
+    }
+
+    QVBoxLayout* mainLayout = new QVBoxLayout();
     const auto& powerups = playerRef->getPowerups();
 
     QFont titleFont;
     titleFont.setBold(true);
+    useButtons.clear(); // Prevent memory/logic bugs on reopen
 
     for (int i = 0; i < 3; ++i) {
         QHBoxLayout* rowLayout = new QHBoxLayout();
 
         QLabel* label = new QLabel(this);
         label->setMinimumWidth(200);
-        // Button to activate the power-up
+
         QPushButton* useButton = new QPushButton("Use", this);
         useButtons.push_back(useButton);
 
@@ -43,12 +53,15 @@ void PowerDialog::setupUI() {
             label->setText(powerups[i]->name());
             label->setFont(titleFont);
             useButton->setEnabled(true);
-            connect(useButton, &QPushButton::clicked, [=]() { usePowerup(i); });
+
+            connect(useButton, &QPushButton::clicked, this, [this, i]() {
+                usePowerup(i);
+            });
         } else {
             label->setText("None");
             useButton->setEnabled(false);
         }
-        // Layout arrangement
+
         rowLayout->addWidget(label);
         rowLayout->addStretch();
         rowLayout->addWidget(useButton);
@@ -58,6 +71,7 @@ void PowerDialog::setupUI() {
     mainLayout->addStretch();
     setLayout(mainLayout);
 }
+
 // Applies the selected power up and closes the dialog
 void PowerDialog::usePowerup(int index) {
     if (index >= 0 && index < static_cast<int>(playerRef->getPowerups().size())) {

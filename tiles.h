@@ -67,7 +67,7 @@ public:
 class SuperMoneyTile : public Tile {
 public:
     void activate(Player& player) override;
-    QColor getColor() override { return QColor("#ffcc80"); }
+    QColor getColor() override { return QColor("#66aa88"); }
     QString getType() override { return "SuperMoneyTile"; }
 };
 

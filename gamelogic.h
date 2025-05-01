@@ -27,6 +27,7 @@ public:
     void usePowerup(int index);
     void setUsedPowerupThisTurn(bool moved);
     bool didUsePowerupMove() const;
+    void addPower(PowerUp* p);
 
     // Turn management
     void setSkipNextTurn(bool skip);
@@ -43,6 +44,7 @@ public:
     QString getName() const;
     int getMoney() const;
     float getIncomePercent() const;
+    std::vector<std::unique_ptr<PowerUp>>& accessPowerups();
 
     // Opponent
     void setOpponent(Player* opponent);

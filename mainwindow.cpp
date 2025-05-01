@@ -3,6 +3,7 @@
 #include "tiles.h"
 #include "powerdialog.h"
 #include "playerinfodialog.h"
+#include "shopdialog.h"
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
 #include <algorithm>
@@ -513,5 +514,11 @@ void MainWindow::on_Tutorial_clicked()
         "Land on different tiles to gain money, power-ups, or encounter events.\n"
         "Reach the end of the board to finish the game!"
         );
+}
+
+void MainWindow::on_Shop_clicked()
+{
+    ShopDialog* dialog = new ShopDialog(currentPlayer, this);
+    dialog->exec();
 }
 

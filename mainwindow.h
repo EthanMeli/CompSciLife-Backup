@@ -37,6 +37,8 @@ private slots:
     void on_Leaderboard_clicked();
     void on_Tutorial_clicked();
 
+    void on_Shop_clicked();
+
 private:
     Ui::MainWindow* ui;
 

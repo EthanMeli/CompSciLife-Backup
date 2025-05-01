@@ -446,9 +446,9 @@
     <property name="geometry">
      <rect>
       <x>300</x>
-      <y>20</y>
+      <y>10</y>
       <width>151</width>
-      <height>31</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -478,6 +478,25 @@
     </property>
     <property name="text">
      <string>Tutorial</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Shop">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>40</y>
+      <width>151</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Terminal</family>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Shop</string>
     </property>
    </widget>
   </widget>

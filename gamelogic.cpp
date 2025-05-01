@@ -106,6 +106,14 @@ QString MoneyPower::name() const {
     return "Energy Drink";
 }
 
+/**
+ * @brief Adds a power-up to the player's inventory.
+ * @param p Pointer to the PowerUp to add. Ownership is transferred to the player.
+ */
+void Player::addPower(PowerUp* p) {
+    powerups.emplace_back(p);
+}
+
 // ------------------------- PLAYER METHODS -------------------------
 
 /**
@@ -160,6 +168,14 @@ void Player::addMoney(int amount) {
  */
 int Player::getMoney() const {
     return money;
+}
+
+/**
+ * @brief Provides mutable access to the player's power-up list.
+ * @return Reference to the vector of unique_ptrs holding the player's power-ups.
+ */
+std::vector<std::unique_ptr<PowerUp>>& Player::accessPowerups() {
+    return powerups;
 }
 
 /**

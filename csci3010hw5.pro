@@ -15,6 +15,7 @@ SOURCES += \
     mainwindow.cpp \
     moneypopupdialog.cpp \
     playerinfodialog.cpp \
+    shopdialog.cpp \
     supermoneypopupdialog.cpp \
     textpopupdialog.cpp \
     tiles.cpp \
@@ -26,6 +27,7 @@ HEADERS += \
     mainwindow.h \
     moneypopupdialog.h \
     playerinfodialog.h \
+    shopdialog.h \
     supermoneypopupdialog.h \
     textpopupdialog.h \
     tiles.h \
@@ -36,6 +38,7 @@ FORMS += \
     mainwindow.ui \
     moneypopupdialog.ui \
     playerinfodialog.ui \
+    shopdialog.ui \
     supermoneypopupdialog.ui \
     textpopupdialog.ui
 

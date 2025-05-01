@@ -1,5 +1,6 @@
 #include "tiles.h"
 #include "moneypopupdialog.h"
+#include "supermoneypopupdialog.h"
 #include "lifeeventdialog.h"
 #include "textpopupdialog.h"
 #include <cstdlib>
@@ -58,7 +59,7 @@ void SuperMoneyTile::activate(Player& player) {
 
     player.addMoney(jackpot);
 
-    MoneyPopupDialog popup;
+    SuperMoneyPopupDialog popup;
     popup.updateText(moneyLabel);
     popup.exec();  // Modal dialog
 }
@@ -263,7 +264,7 @@ void LifeEventTile::activate(Player& player) {
         if (roll <= 2) {
             event = "You got wasted, and now you're hungover.\nYour so called friends ran away,\nforcing you to pay for everything..\nMove back 1 space, pay $1000.";
             player.moveBackward(1);
-            player.addMoney(1000);
+            player.addMoney(-1000);
         } else if (roll <= 4) {
             event = "It was an alright hangout,\nnothing really drastic went on.";
         } else {
