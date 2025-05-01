@@ -5,11 +5,10 @@
 #include <QMainWindow>
 #include <QVector>
 #include <QTimer>
+#include <QGraphicsEllipseItem>
 
 QT_BEGIN_NAMESPACE
-namespace Ui {
-class MainWindow;
-}
+namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
@@ -17,47 +16,51 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(Player* p1, Player* p2, QWidget *parent = nullptr);
+    explicit MainWindow(Player* p1, Player* p2, QWidget *parent = nullptr);
     ~MainWindow();
-    void updatePlayerUI();
-    void handleTile(Player *p); // Main logic for handling tile specific actions
-    void updatePlayerPositions();
+
+    // Game logic
     void setupBoard();
-    void animatePlayerMove();
-    void switchToNextActivePlayer();
+    void updatePlayerUI();
+    void updatePlayerPositions();
     void updatePlayerPanels();
+    void handleTile(Player* p);
+    void animatePlayerMove();
     void startImmediateMove(int newPosition);
+    void switchToNextActivePlayer();
+    void updateLeaderboard(const QString& name, int money);
 
 private slots:
-    void on_p2ViewPower_clicked();
-
     void on_p1ViewPower_clicked();
-
+    void on_p2ViewPower_clicked();
     void on_rollDice_clicked();
+    void on_Leaderboard_clicked();
+    void on_Tutorial_clicked();
 
 private:
-    Ui::MainWindow *ui;    
+    Ui::MainWindow* ui;
+
+    // Players
     Player* player1 = new Player("Player 1");
     Player* player2 = new Player("Player 2");
+    Player* currentPlayer = nullptr;
+    bool isPlayer1Turn = true;
 
+    // Player pieces
     QGraphicsEllipseItem* player1Piece = nullptr;
     QGraphicsEllipseItem* player2Piece = nullptr;
 
-    Player* currentPlayer;
-    bool isPlayer1Turn = true;
-
+    // Board data
+    int tileSize = 50;
+    int rows = 11;
+    int cols = 13;
+    QVector<QVector<Tile*>> boardGrid;
     QVector<QPair<int, int>> playableTileCoords;
 
-    // Tile settings
-    int tileSize = 50;
-    int rows = 9;
-    int cols = 9;
-
-    // Board setup
-    QVector<QVector<Tile*>> boardGrid;
-
+    // Animation
     QTimer* moveTimer = nullptr;
     int animationStep = 0;
     int targetPosition = 0;
 };
+
 #endif // MAINWINDOW_H

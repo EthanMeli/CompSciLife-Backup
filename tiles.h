@@ -10,7 +10,8 @@ enum class TileType {
     POWERUP,
     FORWARD,
     BACKWARD,
-    LIFE_EVENT
+    LIFE_EVENT,
+    SUPER_MONEY
 };
 
 class Tile {
@@ -31,36 +32,43 @@ public:
 class MoneyTile : public Tile {
 public:
     void activate(Player& player) override;
-    QColor getColor() override { return Qt::green; }
+    QColor getColor() override { return QColor("#a8e6a1"); }
     QString getType() override { return "MoneyTile"; }
 };
 
 class PowerupTile : public Tile {
 public:
     void activate(Player& player) override;
-    QColor getColor() override { return QColorConstants::Svg::purple; }
+    QColor getColor() override { return QColor("#c7a8e6"); }
     QString getType() override { return "PowerupTile"; }
 };
 
 class MoveForwardTile : public Tile {
 public:
     void activate(Player& player) override;
-    QColor getColor() override { return Qt::yellow; }
+    QColor getColor() override { return QColor("#ffe066"); }
     QString getType() override { return "MoveForwardTile"; }
 };
 
 class MoveBackwardTile : public Tile {
 public:
     void activate(Player& player) override;
-    QColor getColor() override { return Qt::red; }
+    QColor getColor() override { return QColor("#f4a6a6"); }
     QString getType() override { return "MoveBackwardTile"; }
 };
 
 class LifeEventTile : public Tile {
 public:
     void activate(Player& player) override;
-    QColor getColor() override { return Qt::blue; }
+    QColor getColor() override { return QColor("#99ccee"); }
     QString getType() override { return "LifeEventTile"; }
+};
+
+class SuperMoneyTile : public Tile {
+public:
+    void activate(Player& player) override;
+    QColor getColor() override { return QColor("#ffcc80"); }
+    QString getType() override { return "SuperMoneyTile"; }
 };
 
 // Factory

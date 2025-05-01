@@ -32,7 +32,7 @@
        <x>0</x>
        <y>20</y>
        <width>221</width>
-       <height>421</height>
+       <height>521</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayoutp1">
@@ -206,10 +206,10 @@
    <widget class="QPushButton" name="rollDice">
     <property name="geometry">
      <rect>
-      <x>540</x>
-      <y>40</y>
-      <width>81</width>
-      <height>21</height>
+      <x>530</x>
+      <y>30</y>
+      <width>101</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="font">
@@ -226,9 +226,9 @@
     <property name="geometry">
      <rect>
       <x>220</x>
-      <y>10</y>
+      <y>0</y>
       <width>731</width>
-      <height>21</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="font">
@@ -263,7 +263,7 @@
        <x>0</x>
        <y>20</y>
        <width>221</width>
-       <height>421</height>
+       <height>521</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayoutp2">
@@ -422,7 +422,7 @@
    <widget class="QLabel" name="Dice">
     <property name="geometry">
      <rect>
-      <x>630</x>
+      <x>640</x>
       <y>30</y>
       <width>151</width>
       <height>41</height>
@@ -440,6 +440,44 @@
     </property>
     <property name="alignment">
      <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Leaderboard">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>20</y>
+      <width>151</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Terminal</family>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Leaderboard</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Tutorial">
+    <property name="geometry">
+     <rect>
+      <x>850</x>
+      <y>40</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Terminal</family>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Tutorial</string>
     </property>
    </widget>
   </widget>

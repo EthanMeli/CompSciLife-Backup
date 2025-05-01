@@ -1,6 +1,10 @@
 #include "lifeeventdialog.h"
 #include "ui_lifeeventdialog.h"
 
+/**
+ * @brief Constructs a LifeEventDialog with the given parent.
+ * @param parent The parent widget.
+ */
 LifeEventDialog::LifeEventDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::LifeEventDialog)

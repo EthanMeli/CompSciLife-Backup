@@ -13,18 +13,18 @@ class PowerDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit PowerDialog(Player* player, MainWindow* mainWindow, QWidget *parent = nullptr);
+    explicit PowerDialog(Player* player, MainWindow* mainWindow, QWidget* parent = nullptr);
     ~PowerDialog();
 
 private slots:
     void usePowerup(int index);
 
 private:
+    void setupUI();
+
     Player* playerRef;
     MainWindow* mainWindowRef;
     std::vector<QPushButton*> useButtons;
-
-    void setupUI();
 };
 
 #endif // POWERDIALOG_H

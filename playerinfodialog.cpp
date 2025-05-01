@@ -24,11 +24,19 @@ QString PlayerInfoDialog::getPlayer2Name() const {
 
 void PlayerInfoDialog::on_startGameButton_clicked()
 {
-    if (getPlayer1Name().isEmpty() || getPlayer2Name().isEmpty()) {
+    QString name1 = getPlayer1Name();
+    QString name2 = getPlayer2Name();
+
+    if (name1.isEmpty() || name2.isEmpty()) {
         QMessageBox::warning(this, "Missing Input", "Please enter both player names.");
         return;
     }
 
-    accept(); // Close dialog and return QDialog::Accepted
+    if (name1 == name2) {
+        QMessageBox::warning(this, "Duplicate Names", "Players must have different names.");
+        return;
+    }
+
+    accept();
 }
 
