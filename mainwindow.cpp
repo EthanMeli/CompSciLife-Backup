@@ -26,9 +26,8 @@ MainWindow::MainWindow(Player* p1, Player* p2, QWidget *parent)
     player1 = p1;
     player2 = p2;
 
-    if (player2->getName() == "CPU") {
-        isAI = true;
-    }
+    isAI = (player2->getName() == "CPU");
+    allAI = (player1->getName() == "CPU" && player2->getName() == "CPU");
 
     player1->setOpponent(player2);
     player2->setOpponent(player1);
@@ -231,6 +230,8 @@ void MainWindow::updatePlayerPanels() {
  * @param newPosition The new logical position (index in playableTileCoords) to animate towards.
  */
 void MainWindow::startImmediateMove(int newPosition) {
+    if (moveTimer && moveTimer->isActive()) return;  // Prevent overlapping animations
+
     animationStep = currentPlayer->getPosition();
     targetPosition = newPosition;
     ui->rollDice->setEnabled(false); // Disable again during auto-move
@@ -241,7 +242,6 @@ void MainWindow::startImmediateMove(int newPosition) {
     }
     moveTimer->start(150);
 }
-
 /**
  * @brief Handles game logic for specific tiles
  */
@@ -263,7 +263,6 @@ void MainWindow::handleTile(Player *p) {
  * @brief Animates a player’s movement from current position to target position, step by step.
  *        Uses a timer to simulate movement.
  */
-// Maybe change it so that animation is more fluid? Idk
 void MainWindow::animatePlayerMove() {
     if (animationStep < targetPosition) {
         animationStep++;
@@ -272,33 +271,35 @@ void MainWindow::animatePlayerMove() {
         animationStep--;
     }
     else {
-        // Animation done
         moveTimer->stop();
-
         currentPlayer->setPosition(targetPosition);
         updatePlayerPositions();
 
         int prevPos = currentPlayer->getPosition();
-        handleTile(currentPlayer);
-        updatePlayerUI();
+        handleTile(currentPlayer);  // may trigger another move
 
         if (currentPlayer->getPosition() != prevPos) {
-            return;
+            return; // A tile effect changed position; wait for that animation to finish first
         }
+
+        updatePlayerUI();
 
         if (currentPlayer->getPosition() >= playableTileCoords.size() - 1) {
             currentPlayer->markFinished();
         }
-        if (isAI && isPlayer1Turn) {
-            currentPlayer = player2;
-            doAITurn();
-        }
-        switchToNextActivePlayer();
-        ui->rollDice->setEnabled(true);
+
+        QTimer::singleShot(300, this, [this]() {
+            switchToNextActivePlayer();
+
+            // Enable the Roll button if it's the player's turn next (human)
+            if (!allAI && !(isAI && !isPlayer1Turn)) {
+                ui->rollDice->setEnabled(true);
+            }
+        });
+
         return;
     }
 
-    // After adjusting animationStep, move the piece visually
     auto [r, c] = playableTileCoords[animationStep];
 
     if (isPlayer1Turn) {
@@ -319,6 +320,11 @@ void MainWindow::switchToNextActivePlayer() {
         if (!currentPlayer->isFinished()) {
             animationStep = currentPlayer->getPosition();
             updatePlayerPanels();
+
+            if (allAI || (!isPlayer1Turn && isAI)) {
+                QTimer::singleShot(500, this, &MainWindow::doAITurn);
+            }
+
             return;
         }
     }
@@ -357,8 +363,11 @@ void MainWindow::switchToNextActivePlayer() {
         QMessageBox::information(this, "Player 2 Ending", p2Ending + "\n\n" + p2Stats);
 
         ui->rollDice->setEnabled(false);
-        updateLeaderboard(player1->getName(), p1Money);
-        updateLeaderboard(player2->getName(), p2Money);
+        if (player1->getName() != "CPU")
+            updateLeaderboard(player1->getName(), p1Money);
+
+        if (player2->getName() != "CPU")
+            updateLeaderboard(player2->getName(), p2Money);
 
         QTimer::singleShot(500, this, []() {
             QApplication::quit();
@@ -412,33 +421,38 @@ void MainWindow::updateLeaderboard(const QString& name, int money) {
  * @brief Does AI turn
  */
 void MainWindow::doAITurn() {
+    if (moveTimer && moveTimer->isActive()) return;  // Prevent double trigger
+
     if (currentPlayer->isFinished()) {
-        // Skip if already finished
         switchToNextActivePlayer();
         return;
     }
 
     if (currentPlayer->shouldSkipTurn()) {
-        // Reset skip state
         currentPlayer->clearSkipTurn();
         currentPlayer->notify("You're frozen in time.. turn was skipped!");
         switchToNextActivePlayer();
         return;
     }
-    // Roll between 1 and 6
+
+    if (!currentPlayer->accessPowerups().empty() && rand() % 2 == 0) {
+        int index = rand() % currentPlayer->accessPowerups().size();
+        std::unique_ptr<PowerUp>& selected = currentPlayer->accessPowerups()[index];
+        selected->apply(*currentPlayer);
+        currentPlayer->accessPowerups().erase(currentPlayer->accessPowerups().begin() + index);
+    }
+
     int roll = rand() % 6 + 1;
     ui->Dice->setText("DICE: " + QString::number(roll));
-    // Start pos
     animationStep = currentPlayer->getPosition();
     targetPosition = std::min(animationStep + roll, static_cast<int>(playableTileCoords.size()) - 1);
-    // Disable while moving
+
     ui->rollDice->setEnabled(false);
 
     if (!moveTimer) {
         moveTimer = new QTimer(this);
         connect(moveTimer, &QTimer::timeout, this, &MainWindow::animatePlayerMove);
     }
-    // Animate every 150ms
     moveTimer->start(150);
 }
 

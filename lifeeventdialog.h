@@ -18,6 +18,7 @@ public:
     void updateText(const QString& newText);
     void disableDiceRoll();
     int getDiceRoll() const { return diceRoll; }
+    void setDiceRollManually(int value);
 
 private slots:
     void on_rollDiceButton_clicked();

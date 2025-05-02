@@ -1,7 +1,8 @@
 #include "gamelogic.h"
 #include <QDebug>
-#include <random>
+#include <QTimer>
 #include <QMessageBox>
+#include <random>
 
 // ------------------------- POWER UP METHODS -------------------------
 
@@ -291,11 +292,18 @@ void Player::usePowerup(int index) {
 }
 
 /**
- * @brief Prints a message to the debug console.
- * @param message The message to display.
+ * @brief Displays a message popup. Auto-closes if the player is AI.
+ * @param message The message to show.
  */
 void Player::notify(const QString& message) {
-    QMessageBox::information(nullptr, name, message);
+    QMessageBox* box = new QMessageBox(QMessageBox::Information, name, message, QMessageBox::Ok);
+    box->setAttribute(Qt::WA_DeleteOnClose); // Clean
+    box->show();
+
+    if (name == "CPU") {
+        // Auto close after 1.5 seconds for AI players
+        QTimer::singleShot(1500, box, &QMessageBox::accept);
+    }
 }
 
 /**

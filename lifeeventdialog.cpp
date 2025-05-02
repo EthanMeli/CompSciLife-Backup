@@ -25,6 +25,10 @@ void LifeEventDialog::disableDiceRoll() {
     ui->rollDiceButton->setEnabled(false);
 }
 
+void LifeEventDialog::setDiceRollManually(int value) {
+    diceRoll = value;
+}
+
 void LifeEventDialog::on_rollDiceButton_clicked()
 {
     diceRoll = rand() % 6 + 1;

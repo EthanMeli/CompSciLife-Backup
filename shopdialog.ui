@@ -49,7 +49,7 @@
     <string notr="true">background-color: rgb(204, 153, 0);</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="buyMove">
+  <widget class="QPushButton" name="buyMoney">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -75,7 +75,7 @@
     <string>Contact a shady script dealer</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="buyMoney">
+  <widget class="QPushButton" name="buyMove">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -253,10 +253,10 @@
    </property>
   </widget>
   <zorder>graphicsView</zorder>
-  <zorder>buyMove</zorder>
+  <zorder>buyMoney</zorder>
   <zorder>label</zorder>
   <zorder>buySteal</zorder>
-  <zorder>buyMoney</zorder>
+  <zorder>buyMove</zorder>
   <zorder>label_2</zorder>
   <zorder>label_3</zorder>
   <zorder>label_4</zorder>

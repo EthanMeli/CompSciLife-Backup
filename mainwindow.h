@@ -36,7 +36,6 @@ private slots:
     void on_rollDice_clicked();
     void on_Leaderboard_clicked();
     void on_Tutorial_clicked();
-
     void on_Shop_clicked();
 
 private:
@@ -50,6 +49,7 @@ private:
 
     // AI handling
     bool isAI = false;
+    bool allAI = false;
     void doAITurn();
 
     // Player pieces

@@ -42,6 +42,11 @@ void PlayerInfoDialog::on_startGameButton_clicked()
         return;
     }
 
+    if (name1.toUpper() == "CPU" || name2.toUpper() == "CPU") {
+        QMessageBox::warning(this, "You ain't a robot!", "'CPU' is reserved for bots and cannot be used.");
+        return;
+    }
+
     accept();
 }
 
