@@ -42,8 +42,13 @@ void PlayerInfoDialog::on_startGameButton_clicked()
         return;
     }
 
-    if (name1.toUpper() == "CPU" || name2.toUpper() == "CPU") {
-        QMessageBox::warning(this, "You ain't a robot!", "'CPU' is reserved for bots and cannot be used.");
+    if (name1.toUpper() == "CPU") {
+        QMessageBox::warning(this, "You ain't a robot!", "Player 1 cannot be named 'CPU'.");
+        return;
+    }
+
+    if (!isAIPlayer && name2.toUpper() == "CPU") {
+        QMessageBox::warning(this, "You ain't a robot!", "Player 2 cannot be named 'CPU' unless you're playing vs AI.");
         return;
     }
 
