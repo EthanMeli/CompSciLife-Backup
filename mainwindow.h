@@ -16,7 +16,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(Player* p1, Player* p2, QWidget *parent = nullptr);
+    explicit MainWindow(Player* p1, Player* p2, int numGames = 1, QWidget *parent = nullptr);
     ~MainWindow();
 
     // Game logic
@@ -29,6 +29,8 @@ public:
     void startImmediateMove(int newPosition);
     void switchToNextActivePlayer();
     void updateLeaderboard(const QString& name, int money);
+    void startNewAIGame();
+    void onGameEnd(bool showResults = true);
 
 private slots:
     void on_p1ViewPower_clicked();
@@ -51,6 +53,13 @@ private:
     bool isAI = false;
     bool allAI = false;
     void doAITurn();
+
+    // Multi Game AI
+    int totalGames = 1;
+    int gamesPlayed = 0;
+    int player1Wins = 0;
+    int player2Wins = 0;
+    bool multiGameMode = false;
 
     // Player pieces
     QGraphicsEllipseItem* player1Piece = nullptr;

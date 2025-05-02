@@ -37,7 +37,8 @@ public:
     // Position
     int getPosition() const;
     void setPosition(int pos);
-    bool isFinished() const;
+    bool isFinished();
+    void resetFinished() { finished = false; };
     void markFinished();
 
     // Player Stuff
