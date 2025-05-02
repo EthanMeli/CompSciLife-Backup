@@ -1,0 +1,56 @@
+When the application is first started, the user will be prompted with three options:
+2 Players (both human)
+vs CPU (1 human, one CPU)
+I am a Robot (two CPUs)
+
+The game will boot up and the user will need to press the "Roll" button on the top of the main board to start the game.
+
+DISPLAY
+There are two players that are part of the game.
+Player 1 data is represented with data on the left tab.
+Player 2 data is represented with data on the right tab.
+
+The data tab contains data as follows:
+NAME (Username and color)
+DOLLARS (Amount of money the player has)
+POSITION (Position on the board)
+INCOME (Percentage of income that the player will earn, where the base income is 10k)
+POWERUPS (The "View Power-Ups" version will display the player power up inventory)
+
+TILES
+There are 7 tiles in the game:
+	Empty tile that does nothing
+	Money tile that pays the user based on their income percentage
+	Powerup tile that will give a random powerup to the user
+	Forward tile that gives the player an advantage
+	Backward tile that gives the player a disadvantage
+	Life Event tile that allows the player to roll a separate die to determine the outcomes of an event
+	Super Money tile that pays out a big amount to the player
+
+POWERUPS
+There are 5 powerups. The player can only hold 3 powerups, and any new powerups after 3 will be lost.
+	Bank Account Hack allows you to steal 30% of your opponent's money
+	Job Promotion will grant a 30% income boost and a 3 tile movement forwards
+	Energy Drink will simply give you 1000 dollars
+	Time Freeze lets you skip your opponent's turn
+	Speed Boost will propel you 6 tiles + a die roll, thus max 12 tile forward movements
+
+SHOP
+The player will able to buy powerups from the shop. The player can also buy lottery tickets that will have a 10% chance of granting the player 10k.
+Alternatively, if the player is really rich then they can purchase the shop and gain an income boost.
+
+WIN CONDITION
+We tried to follow the basic rule of the Game of Life. The players do not "win" per se, but they receive an ending that is dependent on their stats.
+For instance, if the player ends the game with negative money, they will receive an "In debt" ending.
+The game will end and display the player endings when both players reach the end tile.
+
+BOARD
+The board is hardcoded and static. The tiles on the board will not change and the players will follow a linear path to the end.
+However, the certain event tiles on the board are random and will activate a random event for the player.
+The power ups are also obtained randomly to prevent similar gameplay.
+
+LEADERBOARD
+The leaderboard will also feature 10 of the richest players and will output the cumulative amount of money that the player earned.
+For instance, if "Bob" ends two games with 10k each, their leaderboard money will be displayed as 20k. 
+The leaderboard money can be updated negatively, as well, so that players have the potential of losing their spot.
+
