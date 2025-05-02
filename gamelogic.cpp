@@ -143,7 +143,7 @@ void Player::setPosition(int pos) {
  * @brief Checks if the player is finished.
  * @return True if finished, false otherwise.
  */
-bool Player::isFinished() const {
+bool Player::isFinished() {
     return finished;
 }
 

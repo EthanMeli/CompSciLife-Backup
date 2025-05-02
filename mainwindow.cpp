@@ -3,6 +3,7 @@
 #include "tiles.h"
 #include "powerdialog.h"
 #include "playerinfodialog.h"
+#include "resultsgraphdialog.h"
 #include "shopdialog.h"
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
@@ -17,7 +18,7 @@
  * @brief Constructor for MainWindow. Initializes the UI and game board.
  * @param parent Pointer to parent QWidget.
  */
-MainWindow::MainWindow(Player* p1, Player* p2, QWidget *parent)
+MainWindow::MainWindow(Player* p1, Player* p2, int numGames, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
@@ -28,6 +29,9 @@ MainWindow::MainWindow(Player* p1, Player* p2, QWidget *parent)
 
     isAI = (player2->getName() == "CPU");
     allAI = (player1->getName() == "CPU" && player2->getName() == "CPU");
+    multiGameMode = allAI && numGames > 1;
+    totalGames = numGames;
+    gamesPlayed = 0;
 
     player1->setOpponent(player2);
     player2->setOpponent(player1);
@@ -37,6 +41,10 @@ MainWindow::MainWindow(Player* p1, Player* p2, QWidget *parent)
     setupBoard();
     updatePlayerPanels();
     updatePlayerUI();
+
+    if (multiGameMode) {
+        QTimer::singleShot(500, this, &MainWindow::doAITurn);
+    }
 }
 
 /**
@@ -353,25 +361,32 @@ void MainWindow::switchToNextActivePlayer() {
         };
 
         int p1Money = player1->getMoney();
-        QString p1Ending = getEnding(p1Money);
-        QString p1Stats = player1->getName() + "\n$" + QString::number(p1Money);
-        QMessageBox::information(this, "Player 1 Ending", p1Ending + "\n\n" + p1Stats);
-
         int p2Money = player2->getMoney();
-        QString p2Ending = getEnding(p2Money);
-        QString p2Stats = player2->getName() + "\n$" + QString::number(p2Money);
-        QMessageBox::information(this, "Player 2 Ending", p2Ending + "\n\n" + p2Stats);
 
-        ui->rollDice->setEnabled(false);
-        if (player1->getName() != "CPU")
-            updateLeaderboard(player1->getName(), p1Money);
+        if (!multiGameMode) {
+            QString p1Ending = getEnding(p1Money);
+            QString p1Stats = player1->getName() + "\n$" + QString::number(p1Money);
+            QMessageBox::information(this, "Player 1 Ending", p1Ending + "\n\n" + p1Stats);
 
-        if (player2->getName() != "CPU")
-            updateLeaderboard(player2->getName(), p2Money);
+            QString p2Ending = getEnding(p2Money);
+            QString p2Stats = player2->getName() + "\n$" + QString::number(p2Money);
+            QMessageBox::information(this, "Player 2 Ending", p2Ending + "\n\n" + p2Stats);
 
-        QTimer::singleShot(500, this, []() {
-            QApplication::quit();
-        });
+            ui->rollDice->setEnabled(false);
+            if (player1->getName() != "CPU")
+                updateLeaderboard(player1->getName(), p1Money);
+
+            if (player2->getName() != "CPU")
+                updateLeaderboard(player2->getName(), p2Money);
+
+            QTimer::singleShot(500, this, []() {
+                QApplication::quit();
+            });
+        } else {
+            onGameEnd();
+        }
+
+
     }
 }
 
@@ -417,6 +432,8 @@ void MainWindow::updateLeaderboard(const QString& name, int money) {
         file.close();
     }
 }
+
+// ------------------------- AI GAME LOGIC HANDLING -------------------------
 /**
  * @brief Does AI turn
  */
@@ -454,6 +471,66 @@ void MainWindow::doAITurn() {
         connect(moveTimer, &QTimer::timeout, this, &MainWindow::animatePlayerMove);
     }
     moveTimer->start(150);
+}
+/**
+ * @brief Starts a new game with the same AI players
+ */
+void MainWindow::startNewAIGame() {
+    // Reset board and players but keep win statistics
+    player1->setPosition(0);
+    player2->setPosition(0);
+    player1->addMoney(-player1->getMoney()); // Reset money to 0
+    player2->addMoney(-player2->getMoney()); // Reset money to 0
+    player1->resetFinished();
+    player2->resetFinished();
+
+    // Reset turn to player 1
+    isPlayer1Turn = true;
+    currentPlayer = player1;
+    animationStep = 0;
+    targetPosition = 0;
+
+    // Update UI
+    updatePlayerPositions();
+    updatePlayerUI();
+    updatePlayerPanels();
+
+    // Start the next game
+    QTimer::singleShot(500, this, &MainWindow::doAITurn);
+}
+/**
+ * @brief Called when a game ends to track statistics and start a new game if in multi-game mode
+ */
+void MainWindow::onGameEnd(bool showResults) {
+    gamesPlayed++;
+
+    // Determine winner based on money
+    int p1Money = player1->getMoney();
+    int p2Money = player2->getMoney();
+
+    if (p1Money > p2Money) {
+        player1Wins++;
+    } else if (p2Money > p1Money) {
+        player2Wins++;
+    }
+    // Ties don't count as wins for either player
+
+    // Show the graph if requested
+    if (showResults) {
+        ResultsGraphDialog resultsDialog(player1Wins, player2Wins, gamesPlayed, totalGames - gamesPlayed, this);
+        resultsDialog.exec();
+    }
+
+    // Check if there are more games to play
+    if (gamesPlayed < totalGames) {
+        startNewAIGame();
+    } else {
+        // All games complete, show final results
+        ResultsGraphDialog finalDialog(player1Wins, player2Wins, gamesPlayed, 0, this);
+        finalDialog.exec();
+
+        QApplication::quit();
+    }
 }
 
 // ------------------------- ON CLICKED SLOTS -------------------------
