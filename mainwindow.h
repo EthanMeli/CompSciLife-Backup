@@ -48,6 +48,10 @@ private:
     Player* currentPlayer = nullptr;
     bool isPlayer1Turn = true;
 
+    // AI handling
+    bool isAI = false;
+    void doAITurn();
+
     // Player pieces
     QGraphicsEllipseItem* player1Piece = nullptr;
     QGraphicsEllipseItem* player2Piece = nullptr;

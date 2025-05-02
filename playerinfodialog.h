@@ -12,7 +12,7 @@ class PlayerInfoDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit PlayerInfoDialog(QWidget *parent = nullptr);
+    explicit PlayerInfoDialog(bool isAI, QWidget *parent = nullptr);
     ~PlayerInfoDialog();
 
     QString getPlayer1Name() const;
@@ -23,6 +23,7 @@ private slots:
 
 private:
     Ui::PlayerInfoDialog* ui;
+    bool isAIPlayer = false;
 };
 
 #endif // PLAYERINFODIALOG_H

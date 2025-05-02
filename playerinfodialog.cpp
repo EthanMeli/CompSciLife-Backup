@@ -2,11 +2,16 @@
 #include "ui_playerinfodialog.h"
 #include <QMessageBox>
 
-PlayerInfoDialog::PlayerInfoDialog(QWidget *parent)
+PlayerInfoDialog::PlayerInfoDialog(bool isAI, QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::PlayerInfoDialog)
 {
     ui->setupUi(this);
+    isAIPlayer = isAI;
+    if (isAIPlayer) {
+        ui->lineEditP2->setText("CPU");
+        ui->lineEditP2->setEnabled(false);
+    }
 }
 
 PlayerInfoDialog::~PlayerInfoDialog()

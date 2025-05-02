@@ -26,6 +26,10 @@ MainWindow::MainWindow(Player* p1, Player* p2, QWidget *parent)
     player1 = p1;
     player2 = p2;
 
+    if (player2->getName() == "CPU") {
+        isAI = true;
+    }
+
     player1->setOpponent(player2);
     player2->setOpponent(player1);
 
@@ -285,7 +289,10 @@ void MainWindow::animatePlayerMove() {
         if (currentPlayer->getPosition() >= playableTileCoords.size() - 1) {
             currentPlayer->markFinished();
         }
-
+        if (isAI && isPlayer1Turn) {
+            currentPlayer = player2;
+            doAITurn();
+        }
         switchToNextActivePlayer();
         ui->rollDice->setEnabled(true);
         return;
@@ -304,7 +311,7 @@ void MainWindow::animatePlayerMove() {
 /**
  * @brief Switches the current player turn. If both players are finished, ends the game and shows final result popups.
  */
-void MainWindow::switchToNextActivePlayer() {
+void MainWindow::switchToNextActivePlayer() {   
     for (int i = 0; i < 2; ++i) {
         isPlayer1Turn = !isPlayer1Turn;
         currentPlayer = isPlayer1Turn ? player1 : player2;
@@ -400,6 +407,39 @@ void MainWindow::updateLeaderboard(const QString& name, int money) {
         }
         file.close();
     }
+}
+/**
+ * @brief Does AI turn
+ */
+void MainWindow::doAITurn() {
+    if (currentPlayer->isFinished()) {
+        // Skip if already finished
+        switchToNextActivePlayer();
+        return;
+    }
+
+    if (currentPlayer->shouldSkipTurn()) {
+        // Reset skip state
+        currentPlayer->clearSkipTurn();
+        currentPlayer->notify("You're frozen in time.. turn was skipped!");
+        switchToNextActivePlayer();
+        return;
+    }
+    // Roll between 1 and 6
+    int roll = rand() % 6 + 1;
+    ui->Dice->setText("DICE: " + QString::number(roll));
+    // Start pos
+    animationStep = currentPlayer->getPosition();
+    targetPosition = std::min(animationStep + roll, static_cast<int>(playableTileCoords.size()) - 1);
+    // Disable while moving
+    ui->rollDice->setEnabled(false);
+
+    if (!moveTimer) {
+        moveTimer = new QTimer(this);
+        connect(moveTimer, &QTimer::timeout, this, &MainWindow::animatePlayerMove);
+    }
+    // Animate every 150ms
+    moveTimer->start(150);
 }
 
 // ------------------------- ON CLICKED SLOTS -------------------------

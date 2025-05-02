@@ -1,11 +1,18 @@
 #include "mainwindow.h"
 #include "playerinfodialog.h"
+#include "numberplayersdialog.h"
 #include <QApplication>
 
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
 
-    PlayerInfoDialog playerDialog;
+    NumberPlayersDialog playerSelectDialog;
+    if (playerSelectDialog.exec() != QDialog::Accepted) {
+        return 0;
+    }
+    bool isAISelected = playerSelectDialog.getAISelected();
+
+    PlayerInfoDialog playerDialog(isAISelected);
     if (playerDialog.exec() != QDialog::Accepted) {
         return 0;
     }
